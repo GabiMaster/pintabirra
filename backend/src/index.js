@@ -7,6 +7,7 @@ const authRoutes = require('./routes/auth')
 const lugaresRoutes = require('./routes/lugares')
 const bebidasRoutes = require('./routes/bebidas')
 const usuariosRoutes = require('./routes/usuarios')
+const recomendacionesRoutes = require('./routes/recomendaciones')
 
 pool.query('SELECT NOW()', (err, res) => {
   if (err) {
@@ -25,6 +26,7 @@ app.use('/auth', authRoutes)
 app.use('/lugares', lugaresRoutes)
 app.use('/bebidas', bebidasRoutes)
 app.use('/usuarios', usuariosRoutes)
+app.use('/recomendaciones', recomendacionesRoutes)
 
 app.get('/', (req, res) => {
   res.json({ mensaje: 'Bienvenido a la API de PintaBirra' })
