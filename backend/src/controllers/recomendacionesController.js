@@ -56,18 +56,18 @@ const getPreferencias = async (req, res) => {
 
 const agregarPreferencia = async (req, res) => {
   const { id } = req.usuario
-  const { tipoBebida } = req.body
+  const { tipo_bebida } = req.body // eslint-disable-line camelcase
   try {
     const existe = await pool.query(
       'SELECT * FROM preferencias WHERE usuario_id = $1 AND tipo_bebida = $2',
-      [id, tipoBebida]
+      [id, tipo_bebida] // eslint-disable-line camelcase
     )
     if (existe.rows.length > 0) {
       return res.status(400).json({ error: 'Ya tenés esa preferencia' })
     }
     const result = await pool.query(
       'INSERT INTO preferencias (usuario_id, tipo_bebida) VALUES ($1, $2) RETURNING *',
-      [id, tipoBebida]
+      [id, tipo_bebida] // eslint-disable-line camelcase
     )
     res.status(201).json(result.rows[0])
   } catch (err) {
@@ -77,11 +77,11 @@ const agregarPreferencia = async (req, res) => {
 
 const eliminarPreferencia = async (req, res) => {
   const { id } = req.usuario
-  const { preferenciaId } = req.params
+  const { preferencia_id } = req.params // eslint-disable-line camelcase
   try {
     await pool.query(
       'DELETE FROM preferencias WHERE id = $1 AND usuario_id = $2',
-      [preferenciaId, id]
+      [preferencia_id, id] // eslint-disable-line camelcase
     )
     res.json({ mensaje: 'Preferencia eliminada' })
   } catch (err) {

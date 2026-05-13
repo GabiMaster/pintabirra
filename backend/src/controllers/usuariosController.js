@@ -18,11 +18,11 @@ const getPerfil = async (req, res) => {
 
 const updatePerfil = async (req, res) => {
   const { id } = req.usuario
-  const { nombre, fotoUrl } = req.body
+  const { nombre, foto_url } = req.body // eslint-disable-line camelcase
   try {
     const result = await pool.query(
       'UPDATE usuarios SET nombre=$1, foto_url=$2 WHERE id=$3 RETURNING id, nombre, email, foto_url',
-      [nombre, fotoUrl, id]
+      [nombre, foto_url, id] // eslint-disable-line camelcase
     )
     res.json(result.rows[0])
   } catch (err) {
@@ -45,18 +45,18 @@ const buscarUsuarios = async (req, res) => {
 
 const agregarAmigo = async (req, res) => {
   const { id } = req.usuario
-  const { amigoId } = req.body
+  const { amigo_id } = req.body // eslint-disable-line camelcase
   try {
     const existe = await pool.query(
       'SELECT * FROM amistades WHERE usuario_id=$1 AND amigo_id=$2',
-      [id, amigoId]
+      [id, amigo_id] // eslint-disable-line camelcase
     )
     if (existe.rows.length > 0) {
       return res.status(400).json({ error: 'Ya existe esa amistad' })
     }
     const result = await pool.query(
       'INSERT INTO amistades (usuario_id, amigo_id, estado) VALUES ($1, $2, $3) RETURNING *',
-      [id, amigoId, 'pendiente']
+      [id, amigo_id, 'pendiente'] // eslint-disable-line camelcase
     )
     res.status(201).json(result.rows[0])
   } catch (err) {

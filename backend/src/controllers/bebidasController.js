@@ -23,11 +23,11 @@ const getBebidaById = async (req, res) => {
 }
 
 const createBebida = async (req, res) => {
-  const { nombre, tipo, descripcion, porcentajeAlcohol } = req.body
+  const { nombre, tipo, descripcion, porcentaje_alcohol } = req.body // eslint-disable-line camelcase
   try {
     const result = await pool.query(
       'INSERT INTO bebidas (nombre, tipo, descripcion, porcentaje_alcohol) VALUES ($1, $2, $3, $4) RETURNING *',
-      [nombre, tipo, descripcion, porcentajeAlcohol]
+      [nombre, tipo, descripcion, porcentaje_alcohol] // eslint-disable-line camelcase
     )
     res.status(201).json(result.rows[0])
   } catch (err) {
@@ -37,11 +37,11 @@ const createBebida = async (req, res) => {
 
 const updateBebida = async (req, res) => {
   const { id } = req.params
-  const { nombre, tipo, descripcion, porcentajeAlcohol } = req.body
+  const { nombre, tipo, descripcion, porcentaje_alcohol } = req.body // eslint-disable-line camelcase
   try {
     const result = await pool.query(
       'UPDATE bebidas SET nombre=$1, tipo=$2, descripcion=$3, porcentaje_alcohol=$4 WHERE id=$5 RETURNING *',
-      [nombre, tipo, descripcion, porcentajeAlcohol, id]
+      [nombre, tipo, descripcion, porcentaje_alcohol, id] // eslint-disable-line camelcase
     )
     res.json(result.rows[0])
   } catch (err) {

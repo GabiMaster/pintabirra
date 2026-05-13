@@ -14,9 +14,27 @@ export default function Login() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  const validar = () => {
+  if (!form.email || !form.password || (esRegistro && !form.nombre)) {
+    setError('Por favor, completá todos los campos');
+    return false;
+  }
+  const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email);
+  if (!emailValido) {
+    setError('Ingresá un correo válido');
+    return false;
+  }
+  if (esRegistro && form.nombre.trim().length < 3) {
+    setError('El nombre debe tener al menos 3 caracteres');
+    return false;
+  }
+  return true;
+};
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    if (!validar()) return;
     try {
       if (esRegistro) {
         await api.post('/auth/register', form);

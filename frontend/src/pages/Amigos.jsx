@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
 
 export default function Amigos() {
@@ -8,6 +9,7 @@ export default function Amigos() {
   const [resultados, setResultados] = useState([]);
   const [mensaje, setMensaje] = useState('');
   const navigate = useNavigate();
+  const { usuario } = useAuth();
 
   useEffect(() => {
     api.get('/usuarios/amigos').then((res) => setAmigos(res.data));
@@ -20,9 +22,9 @@ export default function Amigos() {
     setResultados(res.data);
   };
 
-  const agregarAmigo = async (amigoId) => {
+  const agregarAmigo = async (amigo_id) => {
     try {
-      await api.post('/usuarios/amigos', { amigoId });
+      await api.post('/usuarios/amigos', { amigo_id });
       setMensaje('Solicitud enviada');
       setResultados([]);
       setBusqueda('');
@@ -50,16 +52,28 @@ export default function Amigos() {
 
       {mensaje && <p style={styles.mensaje}>{mensaje}</p>}
 
+      {busqueda.trim().length >= 2 && resultados.length === 0 && (
+        <p style={styles.vacio}>No se encontraron usuarios</p>
+      )}
       {resultados.length > 0 && (
         <div style={styles.resultados}>
-          {resultados.map((u) => (
-            <div key={u.id} style={styles.resultadoItem}>
-              <span>{u.nombre}</span>
-              <button style={styles.agregarBtn} onClick={() => agregarAmigo(u.id)}>
-                Agregar
-              </button>
-            </div>
-          ))}
+          {resultados.map((u) => {
+            const yaEsAmigo = amigos.some((a) => a.id === u.id);
+            return (
+              <div key={u.id} style={styles.resultadoItem}>
+                <span>{u.nombre}</span>
+                {u.id === usuario?.id ? (
+                  <span style={styles.sosVos}>Sos vos</span>
+                ) : yaEsAmigo ? (
+                  <span style={styles.sosVos}>Ya es tu amigo</span>
+                ) : (
+                  <button style={styles.agregarBtn} onClick={() => agregarAmigo(u.id)}>
+                    Agregar
+                  </button>
+                )}
+              </div>
+            );
+          })}
         </div>
       )}
 
@@ -99,4 +113,5 @@ const styles = {
   nombre: { margin: 0, fontWeight: 'bold' },
   estado: { margin: '0.2rem 0 0', color: '#9a9690', fontSize: '0.8rem' },
   vacio: { color: '#9a9690', textAlign: 'center' },
+  sosVos: { color: '#9a9690', fontSize: '0.85rem', fontStyle: 'italic' },
 };

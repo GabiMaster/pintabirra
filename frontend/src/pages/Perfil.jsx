@@ -8,6 +8,7 @@ export default function Perfil() {
   const navigate = useNavigate();
   const [preferencias, setPreferencias] = useState([]);
   const [nuevaPref, setNuevaPref] = useState('');
+  const TIPOS_BEBIDA = ['cerveza', 'vino', 'fernet', 'gin', 'whisky', 'champagne', 'sidra', 'otras'];
   const [mensaje, setMensaje] = useState('');
 
   useEffect(() => {
@@ -62,12 +63,16 @@ export default function Perfil() {
           ))}
         </div>
         <div style={styles.agregarPref}>
-          <input
+          <select
             style={styles.input}
-            placeholder="Ej: cerveza, vino, fernet..."
             value={nuevaPref}
             onChange={(e) => setNuevaPref(e.target.value)}
-          />
+          >
+            <option value="">Seleccioná una bebida...</option>
+            {TIPOS_BEBIDA.filter(t => !preferencias.map(p => p.tipo_bebida).includes(t)).map(t => (
+              <option key={t} value={t}>{t.charAt(0).toUpperCase() + t.slice(1)}</option>
+            ))}
+          </select>
           <button style={styles.agregarBtn} onClick={agregarPreferencia}>Agregar</button>
         </div>
         {mensaje && <p style={styles.mensaje}>{mensaje}</p>}

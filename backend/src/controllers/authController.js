@@ -16,11 +16,11 @@ const register = async (req, res) => {
     }
 
     const salt = await bcrypt.genSalt(10)
-    const passwordHash = await bcrypt.hash(password, salt)
+    const password_hash = await bcrypt.hash(password, salt) // eslint-disable-line camelcase
 
     const newUser = await pool.query(
       'INSERT INTO usuarios (nombre, email, password_hash) VALUES ($1, $2, $3) RETURNING id, nombre, email',
-      [nombre, email, passwordHash]
+      [nombre, email, password_hash] // eslint-disable-line camelcase
     )
 
     res.status(201).json({ usuario: newUser.rows[0] })
